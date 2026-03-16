@@ -24,10 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-neutral-100`}>
+        <div className="mx-auto w-full max-w-2xl min-h-screen border-x border-neutral-200 bg-white">
+          {children}
+        </div>
       </body>
     </html>
   );

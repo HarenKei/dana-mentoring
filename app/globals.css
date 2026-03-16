@@ -5,7 +5,7 @@
    Base: Deep Forest Green rgb(0, 70, 42) / #00462a
    ========================================================================== */
 
-@theme inline {
+@theme {
   /* --------------------------------------------------------------------------
      PRIMARY — Deep Forest Green
      Base: #00462a (rgb 0, 70, 42)
@@ -176,35 +176,6 @@
   --border-focus:   #00462a;    /* primary-600 */
 }
 
-/* ==========================================================================
-   DARK MODE
-   ========================================================================== */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-
-    /* Page background */
-    --background: #0f1410;
-    --foreground: #eaece9;
-
-    /* Surface layers */
-    --surface:         #161d16;   /* dark base card */
-    --surface-raised:  #1e281e;   /* slightly elevated */
-    --surface-overlay: #253025;   /* modals, popovers */
-    --surface-sunken:  #0a0e0a;   /* input backgrounds, inset areas */
-
-    /* Text */
-    --text-primary:   #eaece9;    /* neutral-100 */
-    --text-secondary: #b4bcb2;    /* neutral-300 */
-    --text-muted:     #6e7d6a;    /* neutral-500 */
-    --text-inverse:   #1a201a;
-
-    /* Borders */
-    --border:         #3b443a;    /* neutral-800 */
-    --border-strong:  #475343;    /* neutral-700 */
-    --border-focus:   #1f9466;    /* primary-400 — brighter for dark bg */
-  }
-}
 
 /* ==========================================================================
    BASE STYLES
