@@ -13,7 +13,7 @@ type ResultQuestion = {
 };
 
 type ResultData = {
-  status: string;
+  status: 'ACTIVE' | 'RETRY' | 'COMPLETED' | 'FAILED';
   isAllCorrect: boolean;
   questions: ResultQuestion[];
 };
@@ -52,15 +52,79 @@ export default function QuizResultPage() {
   }
 
   const correctCount = data.questions.filter((q) => q.isCorrect).length;
+  const totalCount = data.questions.length;
+  const wrongCount = totalCount - correctCount;
 
+  // RETRY: 1차 제출 오답 — O/X는 보여주되 정답은 노출 안 함
+  if (data.status === 'RETRY') {
+    return (
+      <div className="px-6 py-10">
+        <header className="mb-8 rounded-2xl bg-warning-500 px-6 py-5">
+          <h1 className="text-2xl font-bold text-white">채점 결과</h1>
+          <p className="mt-1.5 text-sm text-white/80">
+            {correctCount} / {totalCount} 정답
+          </p>
+        </header>
+
+        <div className="flex flex-col gap-4 mb-8">
+          {data.questions.map((question, idx) => (
+            <div
+              key={question.id}
+              className={`rounded-2xl border p-5 ${
+                question.isCorrect ? 'border-success-200 bg-success-50' : 'border-error-200 bg-error-50'
+              }`}
+            >
+              <div className="flex items-start gap-2">
+                <span className={`mt-0.5 shrink-0 text-lg ${question.isCorrect ? 'text-success-500' : 'text-error-500'}`}>
+                  {question.isCorrect ? '⭕' : '❌'}
+                </span>
+                <p className="text-sm font-semibold text-neutral-900 leading-relaxed">
+                  <span className="mr-1 text-neutral-500">Q{idx + 1}.</span>
+                  {question.title}
+                </p>
+              </div>
+              {!question.isCorrect && question.selectedOptionText && (
+                <p className="mt-2 ml-7 text-xs text-error-600">내 답: {question.selectedOptionText}</p>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={() => router.push(`/quiz/${code}/retry`)}
+          className="w-full rounded-xl bg-warning-500 py-3 text-sm font-semibold text-white transition-colors hover:bg-warning-400"
+        >
+          오답노트 풀기
+        </button>
+      </div>
+    );
+  }
+
+  // COMPLETED: 전부 정답
+  if (data.status === 'COMPLETED') {
+    return (
+      <div className="px-6 py-10">
+        <header className="mb-8 rounded-2xl bg-success-600 px-6 py-5">
+          <h1 className="text-2xl font-bold text-white">전부 맞혔어요! 🎉</h1>
+          <p className="mt-1.5 text-sm text-white/80">{totalCount}문항 전부 정답</p>
+        </header>
+        <button
+          onClick={() => router.push(`/quiz/${code}/review`)}
+          className="w-full rounded-xl bg-success-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-success-500"
+        >
+          정답 및 해설 보기
+        </button>
+      </div>
+    );
+  }
+
+  // FAILED: 오답노트도 틀림 — O/X 표시 + 해설 보기
   return (
     <div className="px-6 py-10">
-      <header className={`mb-8 rounded-2xl px-6 py-5 ${data.isAllCorrect ? 'bg-success-600' : 'bg-warning-500'}`}>
-        <h1 className="text-2xl font-bold text-white">
-          {data.isAllCorrect ? '전부 맞혔어요! 🎉' : '채점 결과'}
-        </h1>
+      <header className="mb-8 rounded-2xl bg-error-500 px-6 py-5">
+        <h1 className="text-2xl font-bold text-white">채점 결과</h1>
         <p className="mt-1.5 text-sm text-white/80">
-          {correctCount} / {data.questions.length} 정답
+          {correctCount} / {totalCount} 정답
         </p>
       </header>
 
@@ -88,24 +152,12 @@ export default function QuizResultPage() {
         ))}
       </div>
 
-      <div className="flex flex-col gap-3">
-        {!data.isAllCorrect && (
-          <button
-            onClick={() => router.push(`/quiz/${code}/retry`)}
-            className="w-full rounded-xl bg-warning-500 py-3 text-sm font-semibold text-white transition-colors hover:bg-warning-400"
-          >
-            오답노트 풀기
-          </button>
-        )}
-        {data.isAllCorrect && (
-          <button
-            onClick={() => router.push(`/quiz/${code}/review`)}
-            className="w-full rounded-xl bg-success-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-success-500"
-          >
-            정답 및 해설 보기
-          </button>
-        )}
-      </div>
+      <button
+        onClick={() => router.push(`/quiz/${code}/review`)}
+        className="w-full rounded-xl bg-error-500 py-3 text-sm font-semibold text-white transition-colors hover:bg-error-400"
+      >
+        정답 및 해설 보기
+      </button>
     </div>
   );
 }

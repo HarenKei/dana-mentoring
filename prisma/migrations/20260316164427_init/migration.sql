@@ -2,16 +2,6 @@
 CREATE TYPE "QuizStatus" AS ENUM ('ACTIVE', 'RETRY', 'COMPLETED', 'FAILED');
 
 -- CreateTable
-CREATE TABLE "Mentee" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "inviteCode" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "Mentee_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Question" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
@@ -36,7 +26,6 @@ CREATE TABLE "Option" (
 CREATE TABLE "QuizAssignment" (
     "id" TEXT NOT NULL,
     "code" TEXT NOT NULL,
-    "menteeId" TEXT NOT NULL,
     "status" "QuizStatus" NOT NULL DEFAULT 'ACTIVE',
     "expiresAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -77,9 +66,6 @@ CREATE TABLE "SubmissionAnswer" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Mentee_inviteCode_key" ON "Mentee"("inviteCode");
-
--- CreateIndex
 CREATE UNIQUE INDEX "QuizAssignment_code_key" ON "QuizAssignment"("code");
 
 -- CreateIndex
@@ -90,9 +76,6 @@ CREATE INDEX "Submission_assignmentId_idx" ON "Submission"("assignmentId");
 
 -- AddForeignKey
 ALTER TABLE "Option" ADD CONSTRAINT "Option_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "QuizAssignment" ADD CONSTRAINT "QuizAssignment_menteeId_fkey" FOREIGN KEY ("menteeId") REFERENCES "Mentee"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "AssignmentQuestion" ADD CONSTRAINT "AssignmentQuestion_assignmentId_fkey" FOREIGN KEY ("assignmentId") REFERENCES "QuizAssignment"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
