@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Question {
+  id          String               @id @default(cuid())
+  title       String
+  explanation String?
+  createdAt   DateTime             @default(now())
+  options     Option[]
+  assignments AssignmentQuestion[]
+}
+
+model Option {
+  id                String             @id @default(cuid())
+  text              String
+  isCorrect         Boolean
+  order             Int
+  questionId        String
+  question          Question           @relation(fields: [questionId], references: [id])
+  submissionAnswers SubmissionAnswer[]
+}
+
+model QuizAssignment {
+  id          String               @id @default(cuid())
+  code        String               @unique
+  status      QuizStatus           @default(ACTIVE)
+  expiresAt   DateTime?
+  createdAt   DateTime             @default(now())
+  questions   AssignmentQuestion[]
+  submissions Submission[]
+}
+
+model AssignmentQuestion {
+  id           String         @id @default(cuid())
+  assignmentId String
+  assignment   QuizAssignment @relation(fields: [assignmentId], references: [id])
+  questionId   String
+  question     Question       @relation(fields: [questionId], references: [id])
+  order        Int
+
+  @@index([assignmentId])
+}
+
+model Submission {
+  id            String             @id @default(cuid())
+  assignmentId  String
+  assignment    QuizAssignment     @relation(fields: [assignmentId], references: [id])
+  attemptNumber Int
+  isAllCorrect  Boolean
+  submittedAt   DateTime           @default(now())
+  answers       SubmissionAnswer[]
+
+  @@index([assignmentId])
+}
+
+model SubmissionAnswer {
+  id               String     @id @default(cuid())
+  submissionId     String
+  submission       Submission @relation(fields: [submissionId], references: [id])
+  questionId       String
+  selectedOptionId String
+  selectedOption   Option     @relation(fields: [selectedOptionId], references: [id])
+  isCorrect        Boolean
+}
+
+enum QuizStatus {
+  ACTIVE
+  RETRY
+  COMPLETED
+  FAILED
+}
