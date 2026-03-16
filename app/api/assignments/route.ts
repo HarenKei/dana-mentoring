@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { generateCode } from '@/lib/utils';
 import { requireAdmin } from '@/lib/auth';
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
   } while (await prisma.quizAssignment.findUnique({ where: { code } }));
 
   // 문제 생성 + 출제 묶음을 하나의 트랜잭션으로
-  const assignment = await prisma.$transaction(async (tx) => {
+  const assignment = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const createdQuestions = await Promise.all(
       questions.map((q) =>
         tx.question.create({
