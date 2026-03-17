@@ -40,7 +40,7 @@ export default function QuizRetryPage() {
       return json.data;
     },
     onSuccess: () => {
-      router.push(`/quiz/${code}/result`);
+      router.push(`/quiz/${code}/review`);
     },
   });
 

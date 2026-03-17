@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getSession } from '@/lib/auth';
 
 export async function GET(
   _req: NextRequest,
@@ -12,6 +13,7 @@ export async function GET(
     select: {
       id: true,
       status: true,
+      expiresAt: true,
       questions: {
         orderBy: { order: 'asc' },
         select: {
@@ -37,6 +39,13 @@ export async function GET(
 
   if (assignment.status !== 'COMPLETED' && assignment.status !== 'FAILED') {
     return NextResponse.json({ ok: false, error: '아직 해설을 볼 수 없습니다.' }, { status: 403 });
+  }
+
+  if (assignment.expiresAt && new Date(assignment.expiresAt) < new Date()) {
+    const session = await getSession();
+    if (!session.isAdmin) {
+      return NextResponse.json({ ok: false, error: '열람 기간이 만료되었습니다.' }, { status: 410 });
+    }
   }
 
   return NextResponse.json({

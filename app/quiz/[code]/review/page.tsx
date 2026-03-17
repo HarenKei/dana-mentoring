@@ -16,7 +16,7 @@ type ReviewData = { status: string; questions: ReviewQuestion[] };
 export default function QuizReviewPage() {
   const { code } = useParams<{ code: string }>();
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['quiz-review', code],
     queryFn: async () => {
       const res = await fetch(`/api/quiz/${code}/review`);
@@ -39,7 +39,9 @@ export default function QuizReviewPage() {
     return (
       <div className="flex min-h-screen items-center justify-center px-4">
         <div className="rounded-2xl border border-error-100 bg-error-50 p-8 text-center">
-          <p className="text-sm font-medium text-error-600">해설을 불러오지 못했어요.</p>
+          <p className="text-sm font-medium text-error-600">
+            {(error as Error)?.message ?? '해설을 불러오지 못했어요.'}
+          </p>
         </div>
       </div>
     );
