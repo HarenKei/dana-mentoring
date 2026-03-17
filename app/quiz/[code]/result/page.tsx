@@ -83,9 +83,6 @@ export default function QuizResultPage() {
                   {question.title}
                 </p>
               </div>
-              {!question.isCorrect && question.selectedOptionText && (
-                <p className="mt-2 ml-7 text-xs text-error-600">내 답: {question.selectedOptionText}</p>
-              )}
             </div>
           ))}
         </div>
