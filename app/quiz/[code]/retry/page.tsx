@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation } from '@tanstack/react-query';
 
+const OPTION_LABELS = ['①', '②', '③', '④', '⑤'];
+
 type Option = { id: string; text: string; order: number };
 type Question = { id: string; title: string; order: number; options: Option[] };
 type RetryData = { questions: Question[] };
@@ -107,7 +109,7 @@ export default function QuizRetryPage() {
                         onChange={() => setAnswers((prev) => ({ ...prev, [question.id]: option.id }))}
                         className="mt-0.5 h-4 w-4 shrink-0 accent-warning-500"
                       />
-                      <span className="text-sm text-neutral-900">{option.text}</span>
+                      <span className="text-sm text-neutral-900">{option.text || OPTION_LABELS[option.order]}</span>
                     </label>
                   </li>
                 ))}

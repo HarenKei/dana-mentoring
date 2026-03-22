@@ -4,6 +4,8 @@ import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Suspense } from 'react';
 
+const OPTION_LABELS = ['①', '②', '③', '④', '⑤'];
+
 type RecordOption = { id: string; text: string; isCorrect: boolean; order: number };
 type RecordQuestion = { id: string; title: string; explanation: string | null; options: RecordOption[] };
 type SubmissionAnswer = { questionId: string; isCorrect: boolean; selectedOption: { text: string } };
@@ -126,7 +128,7 @@ function RecordsContent() {
               <ul className="flex flex-col gap-1">
                 {aq.question.options.map((opt) => (
                   <li key={opt.id} className={`text-xs flex items-start gap-1.5 ${opt.isCorrect ? 'text-success-700 font-semibold' : 'text-neutral-500'}`}>
-                    <span>{opt.isCorrect ? '✓' : '·'}</span><span>{opt.text}</span>
+                    <span>{OPTION_LABELS[opt.order]}</span><span>{opt.text || OPTION_LABELS[opt.order]}</span>
                   </li>
                 ))}
               </ul>

@@ -101,18 +101,11 @@ function QuestionBlock({
                   </span>
                   <input
                     type="text"
-                    placeholder={`보기 ${i + 1}`}
-                    {...register(`questions.${qIndex}.options.${i}.text`, {
-                      required: `보기 ${i + 1}을 입력해주세요.`,
-                    })}
-                    className={`flex-1 rounded-lg border px-3.5 py-2 text-sm text-neutral-900 bg-neutral-50 placeholder:text-neutral-400 outline-none transition-colors ${
-                      qErrors?.options?.[i]?.text
-                        ? 'border-error-500 focus:ring-1 focus:ring-error-500'
-                        : 'border-neutral-200 focus:border-primary-600 focus:ring-1 focus:ring-primary-600'
-                    }`}
+                    placeholder={`보기 ${i + 1} (선택)`}
+                    {...register(`questions.${qIndex}.options.${i}.text`)}
+                    className="flex-1 rounded-lg border border-neutral-200 px-3.5 py-2 text-sm text-neutral-900 bg-neutral-50 placeholder:text-neutral-400 outline-none transition-colors focus:border-primary-600 focus:ring-1 focus:ring-primary-600"
                   />
                 </div>
-                <FieldError message={qErrors?.options?.[i]?.text?.message} />
               </div>
             ))}
           </div>

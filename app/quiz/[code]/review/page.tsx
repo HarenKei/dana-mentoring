@@ -3,6 +3,8 @@
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 
+const OPTION_LABELS = ['①', '②', '③', '④', '⑤'];
+
 type ReviewOption = { id: string; text: string; isCorrect: boolean; order: number };
 type ReviewQuestion = {
   id: string;
@@ -72,10 +74,10 @@ export default function QuizReviewPage() {
                   }`}
                 >
                   <span className={`mt-0.5 shrink-0 text-sm font-bold ${option.isCorrect ? 'text-success-600' : 'text-neutral-400'}`}>
-                    {option.isCorrect ? '✓' : '·'}
+                    {OPTION_LABELS[option.order]}
                   </span>
                   <span className={`text-sm ${option.isCorrect ? 'font-semibold text-success-700' : 'text-neutral-600'}`}>
-                    {option.text}
+                    {option.text || OPTION_LABELS[option.order]}
                   </span>
                 </li>
               ))}
